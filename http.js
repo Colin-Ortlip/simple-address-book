@@ -30,8 +30,8 @@ router.route('/contact').post(function(req, res) {
     index: 'addressbook',
     type: 'contact',
     body: {
-      first: input.name,
-      last: input.lastname,
+      first: input.first,
+      last: input.last,
       address: input.address,
       email: input.email,
       phone: parseInt(input.phone)
@@ -72,6 +72,45 @@ router.route('/contact/:name').put(function(req, res) {
       "script":  "ctx._source.name =  "+ "'"+input.new +" ' "+";"
     }
   })
+});
+
+router.route('/contact/:name').delete(function(req, res) {
+  var input = req.params.name;
+  client.deleteByQuery({
+    index: 'addressbook',
+    type: 'contact',
+    body: {
+      query: {
+        match: { name: input }
+      }
+    }
+  })
+});
+
+router.route('/contact').get(function(req, res) {
+  var pages = parseInt(req.query.page);
+  var count = parseInt(req.query.pageSize);
+  var search = {
+    index: 'addressbook',
+    from: (pages - 1) * count,
+    size: count,
+    body: {
+      "query": {
+        "match_all": {}
+      }
+    }
+  };
+  client.search(search, function (err, resp) {
+    console.log('results', {
+      results: resp.hits.hits,
+      page: pages,
+      pages: Math.ceil(resp.hits.total / count)
+    });
+    var results = resp.hits.hits.map(function(hit){
+      return hit._source.first + " " + hit._source.last;
+    });
+    console.log(results);
+  });
 });
 
 module.exports = router;
