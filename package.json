@@ -1,0 +1,17 @@
+{
+  "name": "Simple-Address-Book",
+  "version": "1.0.0",
+  "description": "Addres book using express and elasticsearch",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "elasticsearch": "^16.3.0",
+    "express": "^4.17.1",
+    "mocha": "^6.2.0"
+  },
+  "devDependencies": {},
+  "repository": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
