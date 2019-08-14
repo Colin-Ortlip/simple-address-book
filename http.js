@@ -86,7 +86,7 @@ router.route('/contact/:name').delete(function(req, res) {
     type: 'contact',
     body: {
       query: {
-        match: { name: input }
+        match: { first: input }
       }
     }
   }, function (err, response) {
