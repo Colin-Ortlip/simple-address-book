@@ -20,10 +20,7 @@ router.get('/', function(req, res) {
       }
     }
   }, function(err, response){
-    if(err){
-      console.log(err);
-      res.sendStatus(500);
-    }
+    if(err) return console.log(err);
   });
 });
 
@@ -39,9 +36,42 @@ router.route('/contact').post(function(req, res) {
       email: input.email,
       phone: parseInt(input.phone)
     }
-  }, function (error,response) {
-    if(error) return console.log('ERROR',error);
+  }, function (err,response) {
+    if(err) return console.log(err);
   });
+});
+
+router.route('/contact/:name').get( function(req, res) {
+  var input = req.params.name;
+  client.search({
+    index: 'addressbook',
+    type: 'contact',
+    body: {
+      query: {
+        query_string: {
+          query: input
+        }
+      }
+    }
+  }).then(function (resp) {
+    var results = resp.hits.hits.map(function(hit){
+      return hit._source;
+    });
+    console.log(results);
+    console.log(resp);
+  });
+});
+
+router.route('/contact/:name').put(function(req, res) {
+  var input = req.body;
+  client.updateByQuery({
+    index: 'addressbook',
+    type: 'contact',
+    body: {
+      "query": { "match": { "first": input.old} },
+      "script":  "ctx._source.name =  "+ "'"+input.new +" ' "+";"
+    }
+  })
 });
 
 module.exports = router;
