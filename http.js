@@ -21,6 +21,7 @@ router.get('/', function(req, res) {
     }
   }, function(err, response){
     if(err) return console.log(err);
+    else res.sendStatus(200);
   });
 });
 
@@ -38,6 +39,7 @@ router.route('/contact').post(function(req, res) {
     }
   }, function (err,response) {
     if(err) return console.log(err);
+    else res.sendStatus(200);
   });
 });
 
@@ -58,7 +60,7 @@ router.route('/contact/:name').get( function(req, res) {
       return hit._source;
     });
     console.log(results);
-    console.log(resp);
+    res.sendStatus(200);
   });
 });
 
@@ -71,7 +73,10 @@ router.route('/contact/:name').put(function(req, res) {
       "query": { "match": { "first": input.old} },
       "script":  "ctx._source.name =  "+ "'"+input.new +" ' "+";"
     }
-  })
+  }, function (err, response) {
+    if(err) console.log(err);
+    else res.sendStatus(200);
+  });
 });
 
 router.route('/contact/:name').delete(function(req, res) {
@@ -84,7 +89,10 @@ router.route('/contact/:name').delete(function(req, res) {
         match: { name: input }
       }
     }
-  })
+  }, function (err, response) {
+    if(err) console.log(err);
+    else res.sendStatus(200);
+  });
 });
 
 router.route('/contact').get(function(req, res) {
@@ -110,6 +118,7 @@ router.route('/contact').get(function(req, res) {
       return hit._source.first + " " + hit._source.last;
     });
     console.log(results);
+    res.sendStatus(200);
   });
 });
 
